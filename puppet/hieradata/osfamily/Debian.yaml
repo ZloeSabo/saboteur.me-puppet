@@ -1,0 +1,113 @@
+---
+classes:
+  - '::mysql::server'
+  - '::mysql::client'
+  - '::mysql::bindings'
+  - '::nginx'
+
+#apt settings
+apt::setting:
+  conf-99no-recommends:
+    content: 'APT::Install-Recommends "false";'
+    ensure: 'file'
+  conf-99no-install-suggests:
+    content: 'APT::Install-Suggests "false";'
+    ensure: 'file'
+
+apt::update::frequency: 'daily'
+apt::purge:
+  sources.list: true
+  sources.list: true
+  sources.list.d: true
+  preferences: true
+  preferences.d: true
+
+#mysql settings
+mysql::server::package_name: 'mariadb-server'
+mysql::server:package_ensure: 'latest'
+mysql::server:service_name: 'mysql'
+mysql::server:config_file: '/etc/my.cnf'
+mysql::server:includedir: '/etc/my.cnf.d'
+mysql::server:root_password: "%{hiera('root_password')}"
+
+mysql::client::package_name: 'mariadb-client'
+mysql::client::package_ensure: 'latest'
+
+mysql::bindings::php_enable: true
+
+#nginx settings
+nginx::config::manage_repo: false
+nginx::nginx_upstreams:
+  phpfpm:
+    ensure: present
+    members:
+      - '127.0.0.1:9000'
+
+#PHP settings
+php::ensure: latest
+php::manage_repos: false
+php::fpm: true
+php::dev: true
+php::composer: true
+php::settings:
+  'PHP/max_execution_time': '90'
+  'PHP/max_input_time': '300'
+  'PHP/memory_limit': '64M'
+  'PHP/post_max_size': '32M'
+  'PHP/upload_max_filesize': '32M'
+  'Date/date.timezone': "%{hiera('timezone::timezone')}"
+
+
+wordpress::vhost::template:
+    ensure: present
+    www_root: "/var/www/%{name}"
+    index_files:
+      - 'index.php'
+    try_files:
+      - '$uri'
+      - '$uri/'
+      - '/index.php?$args'
+    location_cfg_append:
+      rewrite: '/wp-admin$ $scheme://$host$uri/ permanent'
+wordpress::location::template:
+  "%{name}_root":
+    vhost: "%{name}"
+    www_root: "/var/www/%{name}"
+    try_files:
+      - '$uri'
+      - '=404'
+    location: '~ \.php$'
+    fastcgi: 'phpfpm'
+  "%{name}_static":
+    vhost: "%{name}"
+    location: '~* ^.+\.(ogg|ogv|svg|svgz|eot|otf|woff|mp4|ttf|rss|atom|jpg|jpeg|gif|png|ico|zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf)$'
+    location_custom_cfg:
+      access_log: 'off'
+      log_not_found: 'off'
+      expires: 'max'
+  "%{name}_favicon":
+    vhost: "%{name}"
+    location: '/favicon.ico'
+    location_custom_cfg:
+      access_log: 'off'
+      log_not_found: 'off'
+  "%{name}_robots":
+    vhost: "%{name}"
+    location: '/robots.txt'
+    try_files:
+      - '$uri'
+      - '/index.php?$args'
+    location_custom_cfg:
+      access_log: 'off'
+      log_not_found: 'off'
+      allow: 'all'
+  "%{name}_dotdirs":
+    vhost: "%{name}"
+    location: '~ /\.'
+    location_custom_cfg:
+      deny: 'all'
+  "%{name}_scripts_in_uploads":
+    vhost: "%{name}"
+    location: '~* /(?:uploads|files)/.*\.php$'
+    location_custom_cfg:
+      deny: 'all'

@@ -1,0 +1,24 @@
+---
+classes:
+  - '::ntp'
+  - '::timezone'
+  - '::ufw'
+
+ntp::package_ensure: 'latest'
+ntp::service_enable: true
+ntp::service_ensure: 'running'
+ntp::servers:
+  - '0.de.pool.ntp.org'
+  - '1.de.pool.ntp.org'
+  - '2.de.pool.ntp.org'
+  - '3.de.pool.ntp.org'
+
+timezone::timezone: 'Europe/Berlin'
+
+profile::packages:
+  vim:
+    ensure: 'latest'
+  git:
+    ensure: 'latest'
+
+root_password: 'not so secret change me'

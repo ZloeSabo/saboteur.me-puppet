@@ -1,0 +1,13 @@
+---
+:backends:
+  - yaml
+:yaml:
+  :datadir: 'hieradata'
+:hierarchy:
+  - "environment/%{environment}"
+  - "node/%{::fqdn}"
+  - "os/%{::operatingsystem}/%{::operatingsystemmajrelease}"
+  - "os/%{::operatingsystem}/%{::operatingsystemrelease}"
+  - "os/%{::operatingsystem}"
+  - "osfamily/%{::osfamily}"
+  - common

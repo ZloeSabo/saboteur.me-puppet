@@ -1,0 +1,13 @@
+---
+  wordpress::vhosts:
+    dev.saboteur.vm:
+      ensure: present
+      #www_root: '/var/www/dev.saboteur.vm'
+      # index_files:
+      #   - 'index.php'
+      # try_files:
+      #   - '$uri'
+      #   - '$uri/'
+      #   - '/index.php?$args'
+      # location_cfg_append:
+      #   rewrite: '/wp-admin$ $scheme://$host$uri/ permanent'

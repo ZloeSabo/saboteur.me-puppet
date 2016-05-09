@@ -1,0 +1,42 @@
+---
+apt::sources:
+    jessie:
+        comment: 'Debian Jessie default repository'
+        location: 'http://httpredir.debian.org/debian'
+        release: 'jessie'
+        repos: 'main'
+        include:
+            src: false
+            deb: true
+    jessie-updates:
+        comment: 'Debian Jessie updates repository'
+        location: 'http://httpredir.debian.org/debian'
+        release: 'jessie-updates'
+        repos: 'main'
+        include:
+            src: false
+            deb: true
+    jessie-security:
+        comment: 'Debian Jessie security repository'
+        location: 'http://security.debian.org/'
+        release: 'jessie/updates'
+        repos: 'main'
+        include:
+            src: false
+            deb: true
+    mariadb-stable-external:
+        comment: 'Official MariaDB mirror'
+        location: 'http://ams2.mirrors.digitalocean.com/mariadb/repo/10.1/debian'
+        release: 'jessie'
+        repos: 'main'
+        key:
+          id: '199369E5404BD5FC7D2FE43BCBCB082A1BB943DB'
+          server: 'keyserver.ubuntu.com'
+        include:
+          src: false
+          deb: true
+    nginx-mainline:
+        comment: 'Nginx mainline repository'
+        location: 'http://nginx.org/packages/debian'
+        release: 'jessie'
+        repos: 'nginx'
