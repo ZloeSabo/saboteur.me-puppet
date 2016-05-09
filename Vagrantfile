@@ -29,11 +29,6 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "install puppet", type: "shell", run: "once", inline: $script
 
-  # config.vm.provision "bootstrap", type: "shell", run: 'once' do |s|
-  #   s.privileged  = false
-  #   s.path        = 'script/bootstrap.sh'
-  # end
-
   config.vm.synced_folder ".", "/vagrant", :nfs => true
   config.vm.synced_folder "puppet/hieradata", "/tmp/vagrant-puppet/hieradata", :nfs => true
 

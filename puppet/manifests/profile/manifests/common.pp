@@ -1,7 +1,4 @@
 class profile::common inherits profile {
-  $root_password = 'thisissosecret'
-  $fpm_upstream = 'phpfpm'
-
   ufw::allow {'ssh':
     port => 22,
     ip   => 'any'
