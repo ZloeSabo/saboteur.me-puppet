@@ -16,3 +16,4 @@ How to run
 3. install [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest) with `vagrant plugin install vagrant-vbguest` ;
 4. run image with `vagrant up`;
 5. change profiles and update configuration with `vagrant provision`.
+6. install puppet modules with docker run --rm -v `pwd`/puppet:/puppet -w /puppet thanandorn/librarian-puppet install
