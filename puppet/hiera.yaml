@@ -1,13 +1,29 @@
 ---
-:backends:
-  - yaml
-:yaml:
-  :datadir: 'hieradata'
+:version: 5
+:defaults:
+  :datadir: hieradata #data
+  :data_hash: yaml_data
+
+# :backends:
+#   - yaml
+# :yaml:
+#   :datadir: # 'hieradata'
 :hierarchy:
-  - "environment/%{environment}"
-  - "node/%{::fqdn}"
-  - "os/%{::operatingsystem}/%{::operatingsystemmajrelease}"
-  - "os/%{::operatingsystem}/%{::operatingsystemrelease}"
-  - "os/%{::operatingsystem}"
-  - "osfamily/%{::osfamily}"
-  - common
+  - name: Env
+    path: "environment/%{environment}.yaml"
+  - name: Node fqdn
+    path: "node/%{::fqdn}.yaml"
+  # - name: "Role"
+  #   path: "role/%role}"
+  - name: OsReleaseMajMin
+    path: "os/%{::operatingsystem}/%{::operatingsystemmajrelease}.yaml"
+  - name: OS release
+    path: "os/%{::operatingsystem}/%{::operatingsystemrelease}.yaml"
+  - name: "OS"
+    path: "os/%{::operatingsystem}.yaml"
+  - name: "OS Family"
+    path: "osfamily/%{::osfamily}.yaml"
+  - name: "common"
+    path: "common.yaml"
+
+# :merge_behavior: 'deeper'

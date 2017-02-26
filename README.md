@@ -15,5 +15,5 @@ How to run
 2. install [Landrush with](https://github.com/vagrant-landrush/landrush) with `vagrant plugin install landrush`;
 3. install [vagrant-vbguest](https://github.com/dotless-de/vagrant-vbguest) with `vagrant plugin install vagrant-vbguest` ;
 4. run image with `vagrant up`;
-5. change profiles and update configuration with `vagrant provision`.
-6. install puppet modules with docker run --rm -v `pwd`/puppet:/puppet -w /puppet thanandorn/librarian-puppet install
+5. install puppet modules with docker run --rm -v `pwd`/puppet:/puppet -w /puppet thanandorn/librarian-puppet install
+6. run provision inside vm with `sudo /opt/puppetlabs/bin/puppet apply /vagrant/puppet/manifests/default.pp`

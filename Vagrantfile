@@ -1,11 +1,26 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 $script = <<SCRIPT
-which puppet 2>&1 > /dev/null && exit 0
-sudo apt-get -y update;
-sudo -E apt-get -y install puppet;
-sudo puppet agent --disable;
-sudo service puppet stop;
+	export DEBIAN_FRONTEND=noninteractive
+  dist=$( cat /etc/apt/sources.list | grep updates | grep 'deb http' | cut -d ' ' -f 3 | cut -d "/" -f 1)
+  echo "### Adding PuppetLabs repository"
+  wget -q \
+	  https://apt.puppetlabs.com/puppetlabs-release-pc1-${dist}.deb \
+	  -O ${HOME}/puppetlabs-release-pc1-${dist}.deb
+  dpkg --install ${HOME}/puppetlabs-release-pc1-${dist}.deb >/dev/null 2>&1
+
+  echo "### Updating repository cache"
+  apt-get update >/dev/null 2>&1
+
+  echo "### Installing Puppet and its dependencies"
+  apt-get install -y apt-transport-https >/dev/null
+  apt-get install -y puppet-agent >/dev/null
+
+  echo "### Stopping Puppet service"
+  PATH=$PATH:/opt/puppetlabs/bin:/opt/puppetlabs/puppet/bin
+  puppet resource service puppet ensure=stopped enable=false  >/dev/null 2>&1
+
+  ln -sf /vagrant/puppet/hiera.yaml /etc/puppetlabs/puppet/hiera.yaml
 SCRIPT
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -33,15 +48,8 @@ Vagrant.configure(2) do |config|
   config.vm.provision "install puppet", type: "shell", run: "once", inline: $script
 
   config.vm.synced_folder ".", "/vagrant", :nfs => true
-  config.vm.synced_folder "puppet/hieradata", "/tmp/vagrant-puppet/hieradata", :nfs => true
 
-  config.vm.provision "puppet" do |puppet|
-    puppet.manifests_path = "puppet/manifests"
-    puppet.module_path = ["puppet/modules", "puppet/manifests"]
-    puppet.hiera_config_path = "puppet/hiera.yaml"
-    puppet.working_directory = "/tmp/vagrant-puppet"
-    #puppet.options = ['--verbose', '--debug']
-  end
+  config.vm.synced_folder "puppet", "/etc/puppetlabs/code/environments/production", :nfs => true
 
   if Vagrant.has_plugin?("landrush")
     config.landrush.enabled = true

@@ -40,3 +40,7 @@ apt::sources:
         location: 'http://nginx.org/packages/debian'
         release: 'jessie'
         repos: 'nginx'
+---
+profile::packages:
+  python:
+    ensure: 'present'

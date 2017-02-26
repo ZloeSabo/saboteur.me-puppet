@@ -21,4 +21,63 @@ profile::packages:
   git:
     ensure: 'latest'
 
-root_password: 'not so secret change me'
+root_password: 'iQuari777'
+
+#letsencrypt::manage_dependencies: false
+
+wordpress::server_template:
+    ensure: present
+    www_root: "/var/www/%{name}"
+    index_files:
+      - 'index.php'
+    try_files:
+      - '$uri'
+      - '$uri/'
+      - '/index.php?$args'
+    location_cfg_append:
+      rewrite: '/wp-admin$ $scheme://$host$uri/ permanent'
+wordpress::location_template:
+  "%{name}_root":
+    server: "%{name}"
+    www_root: "/var/www/%{name}"
+    try_files:
+      - '$uri'
+      - '=404'
+    location: '~ \.php$'
+    fastcgi: 'phpfpm'
+  "%{name}_static":
+    server: "%{name}"
+    location: '~* ^.+\.(ogg|ogv|svg|svgz|eot|otf|woff|mp4|ttf|rss|atom|jpg|jpeg|gif|png|ico|zip|tgz|gz|rar|bz2|doc|xls|exe|ppt|tar|mid|midi|wav|bmp|rtf)$'
+    www_root: "/var/www/%{name}"
+    location_custom_cfg:
+      #access_log: 'off'
+      #log_not_found: 'off'
+      expires: 'max'
+  "%{name}_favicon":
+    server: "%{name}"
+    location: '/favicon.ico'
+    www_root: "/var/www/%{name}"
+    location_custom_cfg:
+      access_log: 'off'
+      log_not_found: 'off'
+  "%{name}_robots":
+    server: "%{name}"
+    location: '/robots.txt'
+    www_root: "/var/www/%{name}"
+    try_files:
+      - '$uri'
+      - '/index.php?$args'
+    location_custom_cfg:
+      access_log: 'off'
+      log_not_found: 'off'
+      allow: 'all'
+  "%{name}_dotdirs":
+    server: "%{name}"
+    location: '~ /\.'
+    location_custom_cfg:
+      deny: 'all'
+  "%{name}_scripts_in_uploads":
+    server: "%{name}"
+    location: '~* /(?:uploads|files)/.*\.php$'
+    location_custom_cfg:
+      deny: 'all'

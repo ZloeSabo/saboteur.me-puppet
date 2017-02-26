@@ -5,9 +5,10 @@ forge "https://forgeapi.puppetlabs.com"
 
 mod 'mayflower/php', '3.4.2'
 mod 'puppetlabs/ntp', '4.1.2'
-mod 'jfryman/nginx', '0.3.0'
+mod 'puppet/nginx', '0.6.0'
 mod 'attachmentgenie/ufw', '1.4.9'
 mod 'puppetlabs/mysql'
 mod 'puppetlabs/apt', '2.2.2'
 mod 'hunner/wordpress', '1.0.0'
 mod 'saz-timezone', '3.3.0'
+mod 'puppet/letsencrypt', '1.1.0'

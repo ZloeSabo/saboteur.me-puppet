@@ -1,8 +1,12 @@
 ---
-  wordpress::vhosts:
+  applications::wordpress:
     dev.saboteur.vm:
-      ensure: present
+      # ensure: present
       www_root: '/var/www/dev.saboteur.vm'
+      db_user: 'test2asd'
+      db_password: 'qwer'
+      db_name: 'saboteur.me'
+      ssl: true
       # index_files:
       #   - 'index.php'
       # try_files:
@@ -11,8 +15,21 @@
       #   - '/index.php?$args'
       # location_cfg_append:
       #   rewrite: '/wp-admin$ $scheme://$host$uri/ permanent'
-  databases:
-    dev.saboteur.vm:
-      user: 'test2asd'
-      password: 'qwer'
-      database: 'saboteur.me'
+    dev2.saboteur.vm:
+      # ensure: present
+      www_root: '/var/www/dev2.saboteur.vm'
+      db_user: 'qerty'
+      db_password: 'qerty'
+      db_name: 'qerty.me'
+      ssl: true
+    
+  # databases:
+  #   dev.saboteur.vm:
+  #     user: 'test2asd'
+  #     password: 'qwer'
+  #     database: 'saboteur.me'
+
+  #webserver_ssl: true
+  #webserver_ssl_email: saboteur@saboteur.me
+
+  webcerts::use_fake: true

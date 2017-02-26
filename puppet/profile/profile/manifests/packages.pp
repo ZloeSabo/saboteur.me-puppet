@@ -1,4 +1,4 @@
 class profile::packages inherits profile {
-  $packages = hiera_hash('profile::packages', {})
+  $packages = lookup('profile::packages', Hash, undef, {})
   create_resources('package', $packages)
 }
